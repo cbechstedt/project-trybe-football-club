@@ -6,6 +6,13 @@ class TeamService {
     const teams = await TeamModel.findAll();
     return teams;
   }
+
+  static async findById(id: number): Promise<ITeam | null> {
+    const team = await TeamModel.findOne({
+      where: { id },
+    });
+    return team;
+  }
 }
 
 export default TeamService;
