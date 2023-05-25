@@ -14,15 +14,16 @@ TeamModel.init({
     primaryKey: true,
     type: DataTypes.INTEGER,
   },
-  team_name: {
+  teamName: {
     allowNull: false,
     type: DataTypes.STRING,
-  }
+  },
 }, {
   tableName: 'teams',
   underscored: true,
   sequelize: db,
   timestamps: false,
+  modelName: 'team',
 });
 
 export default TeamModel;
