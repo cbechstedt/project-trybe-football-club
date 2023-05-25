@@ -23,7 +23,6 @@ TeamModel.init({
   underscored: true,
   sequelize: db,
   timestamps: false,
-  modelName: 'team',
 });
 
 export default TeamModel;
