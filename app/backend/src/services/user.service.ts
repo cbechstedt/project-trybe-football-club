@@ -10,16 +10,31 @@ class UserService {
     const user = await UserModel.findOne({
       where: { email },
     });
-    const userPassword: string = user?.dataValues.password;
 
     if (!user) {
       return undefined;
     }
+
+    const userPassword: string = user?.dataValues.password;
+
     if (!compareSync(password, userPassword)) {
       return undefined;
     }
-    const token = Token.generateToken(email);
+
+    const payload = {
+      email: user.dataValues.email,
+      role: user.dataValues.role,
+    };
+
+    const token = Token.generateToken(payload);
     return token;
+  }
+
+  static async getUserRole(email: string) {
+    const user = await UserModel.findOne({
+      where: { email },
+    });
+    return user?.dataValues.role;
   }
 }
 

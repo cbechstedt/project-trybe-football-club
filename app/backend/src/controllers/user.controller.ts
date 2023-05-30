@@ -11,6 +11,12 @@ class UserController {
     }
     return res.status(401).json({ message: 'Invalid email or password' });
   }
+
+  static async getUserRole(req: Request, res: Response) {
+    const { email } = req.body.user;
+    const userRole = await UserService.getUserRole(email);
+    return res.status(200).json({ role: userRole });
+  }
 }
 
 export default UserController;
