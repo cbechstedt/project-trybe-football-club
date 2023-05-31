@@ -9,7 +9,7 @@ const isValidEmail = (email: string): boolean => {
 const isValidPassword = (password: string): boolean => password.length >= 6;
 
 const validateLoginFields = (req: Request, res: Response, next: NextFunction) => {
-  const { email, password } = req.body;
+  const { email, password }: { email: string, password: string } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ message: 'All fields must be filled' });
@@ -36,13 +36,14 @@ const authToken = (req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    const payload = Token.validateToken(authorization);
-    req.body.user = payload;
-    next();
+    const tokenPayload = Token.validateToken(authorization);
+    req.body.user = tokenPayload;
   } catch (error) {
     console.log(error);
     return res.status(401).json({ message: 'Token must be a valid token' });
   }
+
+  next();
 };
 
 export { validateLoginFields, authToken };
