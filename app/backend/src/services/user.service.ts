@@ -30,7 +30,7 @@ class UserService {
     return token;
   }
 
-  static async getUserRole(email: string) {
+  static async getUserRole(email: string): Promise<string> {
     const user = await UserModel.findOne({
       where: { email },
     });
