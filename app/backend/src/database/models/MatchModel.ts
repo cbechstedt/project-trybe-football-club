@@ -1,13 +1,14 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '.';
-// import OtherModel from './OtherModel';
+import TeamModel from './TeamModel';
 
 class MatchModel extends Model {
   declare id: number;
-  declare username: string;
-  declare role: string;
-  declare email: string;
-  declare password: string;
+  declare homeTeamId: number;
+  declare homeTeamGoals: number;
+  declare awayTeamId: number;
+  declare awayTeamGoals: number;
+  declare inProgress: boolean;
 }
 
 MatchModel.init({
@@ -17,28 +18,37 @@ MatchModel.init({
     primaryKey: true,
     type: DataTypes.INTEGER,
   },
-  username: {
+  homeTeamId: {
     allowNull: false,
-    type: DataTypes.STRING,
-    unique: true,
+    type: DataTypes.INTEGER,
   },
-  role: {
+  homeTeamGoals: {
     allowNull: false,
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
   },
-  email: {
+  awayTeamId: {
     allowNull: false,
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
   },
-  password: {
+  awayTeamGoals: {
     allowNull: false,
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
+  },
+  inProgress: {
+    allowNull: false,
+    type: DataTypes.BOOLEAN,
   },
 }, {
   tableName: 'matches',
-  // underscored: true,
+  underscored: true,
   sequelize: db,
   timestamps: false,
 });
+
+MatchModel.belongsTo(TeamModel, { foreignKey: 'homeTeamId', as: 'homeTeam' });
+MatchModel.belongsTo(TeamModel, { foreignKey: 'awayTeamId', as: 'awayTeam' });
+
+TeamModel.hasMany(MatchModel, { foreignKey: 'homeTeamId' });
+TeamModel.hasMany(MatchModel, { foreignKey: 'awayTeamId' });
 
 export default MatchModel;
