@@ -67,9 +67,18 @@ class MatchService {
   }
 
   static async createMatch(createdData: ICreatedMatch) {
+    const { homeTeamId, awayTeamId } = createdData;
+
+    const homeTeam = await TeamModel.findByPk(homeTeamId);
+    const awayTeam = await TeamModel.findByPk(awayTeamId);
+
+    if (!homeTeam || !awayTeam) {
+      return { type: 'error', message: 'There is no team with such id!' };
+    }
+
     const newMatch = await MatchModel.create({ ...createdData, inProgress: true });
 
-    return newMatch;
+    return { type: null, message: newMatch };
   }
 }
 

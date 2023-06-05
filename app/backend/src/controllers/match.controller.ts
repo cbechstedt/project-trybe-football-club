@@ -42,9 +42,13 @@ class MatchController {
   static async createMatch(req: Request, res: Response) {
     const createdData = req.body;
 
-    const newMatch = await MatchService.createMatch(createdData);
+    const { type, message } = await MatchService.createMatch(createdData);
 
-    return res.status(201).json(newMatch);
+    if (type) {
+      return res.status(404).json({ message });
+    }
+
+    return res.status(201).json(message);
   }
 }
 
