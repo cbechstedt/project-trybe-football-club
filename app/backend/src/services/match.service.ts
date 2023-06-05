@@ -19,6 +19,18 @@ class MatchService {
     });
     return matches;
   }
+
+  static async findInProgressMatches() {
+    const matches = await this.findAll();
+    const inProgressMatches = matches.filter((match) => match.inProgress === true);
+    return inProgressMatches;
+  }
+
+  static async findFinishedMatches() {
+    const matches = await this.findAll();
+    const finishedMatches = matches.filter((match) => match.inProgress === false);
+    return finishedMatches;
+  }
 }
 
 export default MatchService;
