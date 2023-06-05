@@ -1,3 +1,4 @@
+import { ICreatedMatch } from '../interfaces/createdMatch';
 import { IUpdatedMatch } from '../interfaces/updatedMatch';
 import TeamModel from '../database/models/TeamModel';
 import MatchModel from '../database/models/MatchModel';
@@ -63,6 +64,12 @@ class MatchService {
     const updatedMatch = await match.update({ homeTeamGoals, awayTeamGoals });
 
     return updatedMatch;
+  }
+
+  static async createMatch(createdData: ICreatedMatch) {
+    const newMatch = await MatchModel.create({ ...createdData, inProgress: true });
+
+    return newMatch;
   }
 }
 
