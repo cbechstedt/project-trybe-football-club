@@ -31,6 +31,20 @@ class MatchService {
     const finishedMatches = matches.filter((match) => match.inProgress === false);
     return finishedMatches;
   }
+
+  static async finishMatch(id: number) {
+    const [updatedCount] = await MatchModel.update({ inProgress: false }, { where: { id } });
+
+    if (updatedCount === 0) {
+      const match = await MatchModel.findByPk(id);
+      if (!match) {
+        return { message: 'Match not found' };
+      }
+      return { message: 'Cannot finish an already finished match' };
+    }
+
+    return { message: 'Finished' };
+  }
 }
 
 export default MatchService;
