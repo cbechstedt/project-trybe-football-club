@@ -1,3 +1,4 @@
+import { IUpdatedMatch } from '../interfaces/updatedMatch';
 import TeamModel from '../database/models/TeamModel';
 import MatchModel from '../database/models/MatchModel';
 
@@ -44,6 +45,24 @@ class MatchService {
     }
 
     return { message: 'Finished' };
+  }
+
+  static async updateMatch(id: number, updatedData: IUpdatedMatch) {
+    const match = await MatchModel.findByPk(id);
+
+    if (!match) {
+      return { message: 'Match not found' };
+    }
+
+    if (!match.inProgress) {
+      return { message: 'Cannot update an already finished match' };
+    }
+
+    const { homeTeamGoals, awayTeamGoals } = updatedData;
+
+    const updatedMatch = await match.update({ homeTeamGoals, awayTeamGoals });
+
+    return updatedMatch;
   }
 }
 
