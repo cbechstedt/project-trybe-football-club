@@ -1,10 +1,11 @@
+import { IMatchInfo } from '../interfaces/teamInfo';
 import { ICreatedMatch } from '../interfaces/createdMatch';
 import { IUpdatedMatch } from '../interfaces/updatedMatch';
 import TeamModel from '../database/models/TeamModel';
 import MatchModel from '../database/models/MatchModel';
 
 class MatchService {
-  static async findAll() {
+  static async findAll(): Promise<IMatchInfo[]> {
     const matches = await MatchModel.findAll({
       include: [
         {
@@ -19,7 +20,7 @@ class MatchService {
         },
       ],
     });
-    return matches;
+    return matches as unknown as IMatchInfo[];
   }
 
   static async findInProgressMatches() {
