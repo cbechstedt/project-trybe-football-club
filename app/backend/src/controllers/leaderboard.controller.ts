@@ -11,6 +11,11 @@ class LeaderboardController {
     const infoAwayTeams = await LeaderboardService.generateInfoAwayTeams();
     return res.status(200).json(infoAwayTeams);
   }
+
+  static async generateCompleteLeaderboard(req: Request, res: Response) {
+    const infoTeams = await LeaderboardService.generateCompleteLeaderboard();
+    return res.status(200).json(infoTeams);
+  }
 }
 
 export default LeaderboardController;
