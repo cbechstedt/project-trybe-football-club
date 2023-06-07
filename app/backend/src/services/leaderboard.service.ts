@@ -1,14 +1,7 @@
-import { IMatchInfo, ITeamInfo2 } from '../interfaces/teamInfo';
+import { ITeamInfo2 } from '../interfaces/teamInfo';
 import MatchService from './match.service';
 import TeamService from './team.service';
-import {
-  getHomeMatchesByTeam,
-  countVictories,
-  countDraws,
-  countLosses,
-  calculateGoalsFavor,
-  calculateGoalsOwn,
-} from '../utils/leaderboard';
+import { getHomeMatchesByTeam, createTeamInfo, compareTeams } from '../utils/leaderboard';
 
 class LeaderboardService {
   static async generateInfoHomeTeams(): Promise<ITeamInfo2[]> {
@@ -17,33 +10,18 @@ class LeaderboardService {
 
     const infoHomeTeams = teams.map((team) => {
       const homeMatches = getHomeMatchesByTeam(team.teamName, matches);
-      const teamInfo = this.createTeamInfo(homeMatches, team.teamName);
-      // console.log('homeMatches', homeMatches);
-      // console.log('teamInfo', teamInfo);
+      const teamInfo = createTeamInfo(homeMatches, team.teamName);
+
       return teamInfo;
     });
-    return infoHomeTeams;
+
+    return this.sortTeams(infoHomeTeams);
   }
 
-  static createTeamInfo(matches: IMatchInfo[], teamName: string): ITeamInfo2 {
-    const totalGames = matches.length;
-    const totalVictories = countVictories(matches);
-    const totalDraws = countDraws(matches);
-    const totalLosses = countLosses(matches);
-    const goalsFavor = calculateGoalsFavor(matches);
-    const goalsOwn = calculateGoalsOwn(matches);
-    const totalPoints = totalVictories * 3 + totalDraws;
+  static sortTeams(infoTeams: ITeamInfo2[]): ITeamInfo2[] {
+    infoTeams.sort(compareTeams);
 
-    return {
-      name: teamName,
-      totalPoints,
-      totalGames,
-      totalVictories,
-      totalDraws,
-      totalLosses,
-      goalsFavor,
-      goalsOwn,
-    };
+    return infoTeams;
   }
 }
 
