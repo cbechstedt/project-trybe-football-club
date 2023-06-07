@@ -4,61 +4,124 @@ export function getHomeMatchesByTeam(teamName: string, matches: IMatchInfo[]) {
   return matches.filter((match) => match.homeTeam.teamName === teamName);
 }
 
-export function countVictories(matches: IMatchInfo[]): number {
+export function getAwayMatchesByTeam(teamName: string, matches: IMatchInfo[]) {
+  return matches.filter((match) => match.awayTeam.teamName === teamName);
+}
+
+export function countHomeVictories(matches: IMatchInfo[]): number {
   return matches.filter((match) => match.homeTeamGoals > match.awayTeamGoals).length;
 }
 
-export function countDraws(matches: IMatchInfo[]): number {
+export function countAwayVictories(matches: IMatchInfo[]): number {
+  return matches.filter((match) => match.awayTeamGoals > match.homeTeamGoals).length;
+}
+
+export function countHomeDraws(matches: IMatchInfo[]): number {
   return matches.filter((match) => match.homeTeamGoals === match.awayTeamGoals).length;
 }
 
-export function countLosses(matches: IMatchInfo[]): number {
+export function countAwayDraws(matches: IMatchInfo[]): number {
+  return matches.filter((match) => match.awayTeamGoals === match.homeTeamGoals).length;
+}
+
+export function countHomeLosses(matches: IMatchInfo[]): number {
   return matches.filter((match) => match.homeTeamGoals < match.awayTeamGoals).length;
 }
 
-export function calculateGoalsFavor(matches: IMatchInfo[]): number {
+export function countAwayLosses(matches: IMatchInfo[]): number {
+  return matches.filter((match) => match.awayTeamGoals < match.homeTeamGoals).length;
+}
+
+export function calculateHomeGoalsFavor(matches: IMatchInfo[]): number {
   return matches.reduce((sum, match) => sum + match.homeTeamGoals, 0);
 }
 
-export function calculateGoalsOwn(matches: IMatchInfo[]): number {
+export function calculateAwayGoalsFavor(matches: IMatchInfo[]): number {
   return matches.reduce((sum, match) => sum + match.awayTeamGoals, 0);
 }
 
-export function calculateEfficiency(matches: IMatchInfo[]): number {
-  const victories = countVictories(matches);
-  const draws = countDraws(matches);
+export function calculateHomeGoalsOwn(matches: IMatchInfo[]): number {
+  return matches.reduce((sum, match) => sum + match.awayTeamGoals, 0);
+}
+
+export function calculateAwayGoalsOwn(matches: IMatchInfo[]): number {
+  return matches.reduce((sum, match) => sum + match.homeTeamGoals, 0);
+}
+
+export function calculateHomeEfficiency(matches: IMatchInfo[]): number {
+  const victories = countHomeVictories(matches);
+  const draws = countHomeDraws(matches);
   const points = victories * 3 + draws;
   const totalGames = matches.length;
   const efficiency = (points / (totalGames * 3)) * 100;
   return Number(efficiency.toFixed(2));
 }
 
-function calculatePoints(matches: IMatchInfo[]) {
-  const victories = countVictories(matches);
-  const draws = countDraws(matches);
+export function calculateAwayEfficiency(matches: IMatchInfo[]): number {
+  const victories = countAwayVictories(matches);
+  const draws = countAwayDraws(matches);
+  const points = victories * 3 + draws;
+  const totalGames = matches.length;
+  const efficiency = (points / (totalGames * 3)) * 100;
+  return Number(efficiency.toFixed(2));
+}
+
+function calculateHomePoints(matches: IMatchInfo[]) {
+  const victories = countHomeVictories(matches);
+  const draws = countHomeDraws(matches);
   const points = victories * 3 + draws;
   return points;
 }
 
-function calculateGoalsBalance(matches: IMatchInfo[]) {
-  const goalsFavor = calculateGoalsFavor(matches);
-  const goalsOwn = calculateGoalsOwn(matches);
+function calculateAwayPoints(matches: IMatchInfo[]) {
+  const victories = countAwayVictories(matches);
+  const draws = countAwayDraws(matches);
+  const points = victories * 3 + draws;
+  return points;
+}
+
+function calculateHomeGoalsBalance(matches: IMatchInfo[]) {
+  const goalsFavor = calculateHomeGoalsFavor(matches);
+  const goalsOwn = calculateHomeGoalsOwn(matches);
   const goalsBalance = goalsFavor - goalsOwn;
   return goalsBalance;
 }
 
-export function createTeamInfo(matches: IMatchInfo[], teamName: string): ITeamInfo2 {
+function calculateAwayGoalsBalance(matches: IMatchInfo[]) {
+  const goalsFavor = calculateAwayGoalsFavor(matches);
+  const goalsOwn = calculateAwayGoalsOwn(matches);
+  const goalsBalance = goalsFavor - goalsOwn;
+  return goalsBalance;
+}
+
+export function createHomeTeamInfo(matches: IMatchInfo[], teamName: string): ITeamInfo2 {
   const teamInfo = {
     name: teamName,
-    totalPoints: calculatePoints(matches),
+    totalPoints: calculateHomePoints(matches),
     totalGames: matches.length,
-    totalVictories: countVictories(matches),
-    totalDraws: countDraws(matches),
-    totalLosses: countLosses(matches),
-    goalsFavor: calculateGoalsFavor(matches),
-    goalsOwn: calculateGoalsOwn(matches),
-    goalsBalance: calculateGoalsBalance(matches),
-    efficiency: calculateEfficiency(matches),
+    totalVictories: countHomeVictories(matches),
+    totalDraws: countHomeDraws(matches),
+    totalLosses: countHomeLosses(matches),
+    goalsFavor: calculateHomeGoalsFavor(matches),
+    goalsOwn: calculateHomeGoalsOwn(matches),
+    goalsBalance: calculateHomeGoalsBalance(matches),
+    efficiency: calculateHomeEfficiency(matches),
+  };
+  return teamInfo;
+}
+
+export function createAwayTeamInfo(matches: IMatchInfo[], teamName: string): ITeamInfo2 {
+  const teamInfo = {
+    name: teamName,
+    totalPoints: calculateAwayPoints(matches),
+    totalGames: matches.length,
+    totalVictories: countAwayVictories(matches),
+    totalDraws: countAwayDraws(matches),
+    totalLosses: countAwayLosses(matches),
+    goalsFavor: calculateAwayGoalsFavor(matches),
+    goalsOwn: calculateAwayGoalsOwn(matches),
+    goalsBalance: calculateAwayGoalsBalance(matches),
+    efficiency: calculateAwayEfficiency(matches),
   };
   return teamInfo;
 }

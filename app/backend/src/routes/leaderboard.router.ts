@@ -4,5 +4,6 @@ import LeaderboardController from '../controllers/leaderboard.controller';
 const leaderboardRouter = express.Router();
 
 leaderboardRouter.get('/home', LeaderboardController.generateInfoHomeTeams);
+leaderboardRouter.get('/away', LeaderboardController.generateInfoAwayTeams);
 
 export default leaderboardRouter;
